@@ -12,4 +12,7 @@
   <ItemGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
     <SourceRoot Include="/home/rafael/.nuget/packages/" />
   </ItemGroup>
+  <ImportGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <Import Project="$(NuGetPackageRoot)radzen.blazor/5.7.0/buildTransitive/Radzen.Blazor.props" Condition="Exists('$(NuGetPackageRoot)radzen.blazor/5.7.0/buildTransitive/Radzen.Blazor.props')" />
+  </ImportGroup>
 </Project>

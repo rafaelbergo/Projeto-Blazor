@@ -1,3 +1,10 @@
+/hdd/UTFPR/Estagio/Projeto-Blazor/BlazorApp/obj/Debug/net8.0/BlazorApp.csproj.AssemblyReference.cache
+/hdd/UTFPR/Estagio/Projeto-Blazor/BlazorApp/obj/Debug/net8.0/BlazorApp.GeneratedMSBuildEditorConfig.editorconfig
+/hdd/UTFPR/Estagio/Projeto-Blazor/BlazorApp/obj/Debug/net8.0/BlazorApp.AssemblyInfoInputs.cache
+/hdd/UTFPR/Estagio/Projeto-Blazor/BlazorApp/obj/Debug/net8.0/BlazorApp.AssemblyInfo.cs
+/hdd/UTFPR/Estagio/Projeto-Blazor/BlazorApp/obj/Debug/net8.0/BlazorApp.csproj.CoreCompileInputs.cache
+/hdd/UTFPR/Estagio/Projeto-Blazor/BlazorApp/obj/Debug/net8.0/BlazorApp.MvcApplicationPartsAssemblyInfo.cache
+/hdd/UTFPR/Estagio/Projeto-Blazor/BlazorApp/obj/Debug/net8.0/BlazorApp.sourcelink.json
 /hdd/UTFPR/Estagio/Projeto-Blazor/BlazorApp/bin/Debug/net8.0/appsettings.Development.json
 /hdd/UTFPR/Estagio/Projeto-Blazor/BlazorApp/bin/Debug/net8.0/appsettings.json
 /hdd/UTFPR/Estagio/Projeto-Blazor/BlazorApp/bin/Debug/net8.0/BlazorApp.staticwebassets.runtime.json
@@ -6,11 +13,8 @@
 /hdd/UTFPR/Estagio/Projeto-Blazor/BlazorApp/bin/Debug/net8.0/BlazorApp.runtimeconfig.json
 /hdd/UTFPR/Estagio/Projeto-Blazor/BlazorApp/bin/Debug/net8.0/BlazorApp.dll
 /hdd/UTFPR/Estagio/Projeto-Blazor/BlazorApp/bin/Debug/net8.0/BlazorApp.pdb
-/hdd/UTFPR/Estagio/Projeto-Blazor/BlazorApp/obj/Debug/net8.0/BlazorApp.GeneratedMSBuildEditorConfig.editorconfig
-/hdd/UTFPR/Estagio/Projeto-Blazor/BlazorApp/obj/Debug/net8.0/BlazorApp.AssemblyInfoInputs.cache
-/hdd/UTFPR/Estagio/Projeto-Blazor/BlazorApp/obj/Debug/net8.0/BlazorApp.AssemblyInfo.cs
-/hdd/UTFPR/Estagio/Projeto-Blazor/BlazorApp/obj/Debug/net8.0/BlazorApp.csproj.CoreCompileInputs.cache
-/hdd/UTFPR/Estagio/Projeto-Blazor/BlazorApp/obj/Debug/net8.0/BlazorApp.MvcApplicationPartsAssemblyInfo.cache
+/hdd/UTFPR/Estagio/Projeto-Blazor/BlazorApp/bin/Debug/net8.0/Radzen.Blazor.dll
+/hdd/UTFPR/Estagio/Projeto-Blazor/BlazorApp/bin/Debug/net8.0/System.Linq.Dynamic.Core.dll
 /hdd/UTFPR/Estagio/Projeto-Blazor/BlazorApp/obj/Debug/net8.0/staticwebassets.build.json
 /hdd/UTFPR/Estagio/Projeto-Blazor/BlazorApp/obj/Debug/net8.0/staticwebassets.development.json
 /hdd/UTFPR/Estagio/Projeto-Blazor/BlazorApp/obj/Debug/net8.0/staticwebassets/msbuild.BlazorApp.Microsoft.AspNetCore.StaticWebAssets.props
@@ -22,6 +26,7 @@
 /hdd/UTFPR/Estagio/Projeto-Blazor/BlazorApp/obj/Debug/net8.0/scopedcss/Components/Layout/NavMenu.razor.rz.scp.css
 /hdd/UTFPR/Estagio/Projeto-Blazor/BlazorApp/obj/Debug/net8.0/scopedcss/bundle/BlazorApp.styles.css
 /hdd/UTFPR/Estagio/Projeto-Blazor/BlazorApp/obj/Debug/net8.0/scopedcss/projectbundle/BlazorApp.bundle.scp.css
+/hdd/UTFPR/Estagio/Projeto-Blazor/BlazorApp/obj/Debug/net8.0/BlazorApp.csproj.Up2Date
 /hdd/UTFPR/Estagio/Projeto-Blazor/BlazorApp/obj/Debug/net8.0/BlazorApp.dll
 /hdd/UTFPR/Estagio/Projeto-Blazor/BlazorApp/obj/Debug/net8.0/refint/BlazorApp.dll
 /hdd/UTFPR/Estagio/Projeto-Blazor/BlazorApp/obj/Debug/net8.0/BlazorApp.pdb
