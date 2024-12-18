@@ -3,15 +3,20 @@
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<div class=" px-4" style="display: flex;">
+    <p style="color:black;">Background color: </p>
+    <div style="padding-left: 10;">
+        <RadzenColorPicker @bind-Value="@backgroundColor" ShowHSV="true" ShowRGBA="false" ShowColors="true" ShowButton="false" />
+    </div>
+    
+</div>
 
-Welcome to your new app.
-
-<RadzenButton Click="@ButtonClicked" Text="Clique Aqui" Style="margin-top: 20px;" />
+<div style="width:100%; height:100%; background-color:@backgroundColor;">
+    <div>
+        <p>Test</p>
+    </div>
+</div>
 
 @code {
-    void ButtonClicked()
-    {
-        <p>Botao clicado!</p>
-    }
+    private string backgroundColor = "rgb(255, 255, 255)";
 }

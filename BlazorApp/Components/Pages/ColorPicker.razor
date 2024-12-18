@@ -1,0 +1,15 @@
+<div class="rz-p-0 rz-p-md-12">
+    <RadzenRow class="rz-my-12">
+        <RadzenColumn Size="12" SizeMD="6" class="rz-text-align-center rz-text-align-md-start">
+            <RadzenColorPicker @bind-Value=@Color ShowHSV=true ShowRGBA=false ShowColors=true ShowButton=false Change=@OnChange />
+        </RadzenColumn>
+    </RadzenRow>
+</div>
+
+@code {
+    [Parameter]
+    public string Color { get; set; } = "rgb(68, 58, 110)";
+
+    void OnChange(string value)
+    {}
+}
