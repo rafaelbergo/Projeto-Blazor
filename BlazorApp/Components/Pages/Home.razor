@@ -3,20 +3,27 @@
 
 <PageTitle>Home</PageTitle>
 
-<div class=" px-4" style="display: flex;">
-    <p style="color:black;">Background color: </p>
-    <div style="padding-left: 10;">
+<div style="display: flex; height: 100vh;">
+
+    <!-- Menu lateral -->
+    <div style="width: 275px; background-color: @menuColor; color: black; padding: 10px; box-shadow: 2px 0 5px rgba(0,0,0,0.1);">
+        <h3>BlazorApp</h3>
+
+        <p style="color:black;">Background color: </p>
         <RadzenColorPicker @bind-Value="@backgroundColor" ShowHSV="true" ShowRGBA="false" ShowColors="true" ShowButton="false" />
+        <p style="color:black;">Menu color: </p>
+        <RadzenColorPicker @bind-Value="@menuColor" ShowHSV="true" ShowRGBA="false" ShowColors="true" ShowButton="false" />
     </div>
-    
-</div>
 
-<div style="width:100%; height:100%; background-color:@backgroundColor;">
-    <div>
-        <p>Test</p>
+    <!-- Conteudo principal -->
+    <div style="width:100%; height:100%; background-color:@backgroundColor;">
+        <div>
+            <p>Test</p>
+        </div>
     </div>
 </div>
-
 @code {
     private string backgroundColor = "rgb(255, 255, 255)";
+    private string menuColor = "rgb(37, 150, 190)";
+    // rgb(37, 150, 190)
 }
