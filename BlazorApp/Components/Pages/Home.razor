@@ -18,32 +18,36 @@
     <!-- Conteudo principal -->
     <div style="width:100%; height:100%; background-color:@backgroundColor;">
         <div style="padding: 10px">
-            <div style="display: flex; justify-content: flex-start; align-items: center; gap: 20px; margin-bottom: 10px;">
-                <div class="page-size-chooser">
-                    Items per page:
-                    <select @bind="@pagination.ItemsPerPage">
-                        <option>5</option>
-                        <option>10</option>
-                        <option>20</option>
-                        <option>50</option>
-                    </select>
+            <div style="max-width: 100%; width: fit-content;">
+                <div style="display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-bottom: 10px;">
+                    <button @onclick="ShowAddItemModal">Add Item</button>
+                    <div class="page-size-chooser">
+                        Items per page:
+                        <select @bind="@pagination.ItemsPerPage">
+                            <option>5</option>
+                            <option>10</option>
+                            <option>20</option>
+                            <option>50</option>
+                        </select>
+                    </div>
                 </div>
-                <button @onclick="ShowAddItemModal">+ Item</button>
+
+                <QuickGrid Items="@CuboItems.AsQueryable()" TItem="Cubo" Pagination="pagination">
+                    <PropertyColumn Property="@(d => d.Name)" Title="Name" Sortable="true" />
+                    <PropertyColumn Property="@(d => d.Description)" Title="Description" Sortable="false" />
+                    <PropertyColumn Property="@(d => d.X)" Title="X" Sortable="true" />
+                    <PropertyColumn Property="@(d => d.Y)" Title="Y" Sortable="true" />
+                    <PropertyColumn Property="@(d => d.Z)" Title="Z" Sortable="true" />
+                    <PropertyColumn Property="@(d => d.RotX)" Title="Rotation X" Sortable="true" />
+                    <PropertyColumn Property="@(d => d.RotY)" Title="Rotation Y" Sortable="true" />
+                    <PropertyColumn Property="@(d => d.RotZ)" Title="Rotation Z" Sortable="true" />
+                    <PropertyColumn Property="@(d => d.Scale)" Title="Scale" Sortable="true" />
+                </QuickGrid>
+            
+                <div style="width: 100%;">
+                    <Paginator State="@pagination" />
+                </div>
             </div>
-
-            <QuickGrid Items="@CuboItems.AsQueryable()" TItem="Cubo" Pagination="pagination">
-                <PropertyColumn Property="@(d => d.Name)" Title="Name" Sortable="true" />
-                <PropertyColumn Property="@(d => d.Description)" Title="Description" Sortable="false" />
-                <PropertyColumn Property="@(d => d.X)" Title="X" Sortable="true" />
-                <PropertyColumn Property="@(d => d.Y)" Title="Y" Sortable="true" />
-                <PropertyColumn Property="@(d => d.Z)" Title="Z" Sortable="true" />
-                <PropertyColumn Property="@(d => d.RotX)" Title="Rotation X" Sortable="true" />
-                <PropertyColumn Property="@(d => d.RotY)" Title="Rotation Y" Sortable="true" />
-                <PropertyColumn Property="@(d => d.RotZ)" Title="Rotation Z" Sortable="true" />
-                <PropertyColumn Property="@(d => d.Scale)" Title="Scale" Sortable="true" />
-            </QuickGrid>
-
-            <Paginator State="@pagination" />
         </div>
     </div>
 </div>
@@ -53,11 +57,11 @@
 {
     <div class="modal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); display: flex; justify-content: center; align-items: center;">
         <div class="modal-content" style="background-color: white; padding: 20px; border-radius: 5px; width: 400px;">
-            <h3>Adicionar Novo Item</h3>
-            <label>Nome</label>
-            <input placeholder="Nome" @bind="newItem.Name" style="width: 100%; margin-bottom: 10px;" />
-            <label>Descrição</label>
-            <input placeholder="Descrição" @bind="newItem.Description" style="width: 100%; margin-bottom: 10px;" />
+            <h3>Add Item</h3>
+            <label>Name</label>
+            <input placeholder="Name" @bind="newItem.Name" style="width: 100%; margin-bottom: 10px;" required />
+            <label>Description</label>
+            <input placeholder="Description" @bind="newItem.Description" style="width: 100%; margin-bottom: 10px;" />
             <label>X</label>
             <input placeholder="X" type="number" @bind="newItem.X" style="width: 100%; margin-bottom: 10px;" />
             <label>Y</label>
@@ -82,25 +86,38 @@
     private string backgroundColor = "rgb(255, 255, 255)";
     private string menuColor = "rgb(37, 150, 190)";
 
-    public class Cubo
-    {
-        public string Name { get; set; }
+    public class Cubo{
+        public required string Name { get; set; }
         public string? Description { get; set; }
-        public double X { get; set; }
-        public double Y { get; set; }
-        public double Z { get; set; }
+        public required double X { get; set; }
+        public required double Y { get; set; }
+        public required double Z { get; set; }
         public double? RotX { get; set; }
         public double? RotY { get; set; }
         public double? RotZ { get; set; }
         public double? Scale { get; set; }
+
+        public Cubo() {}
     }
     private bool isAddItemModalVisible = false;
-    private Cubo newItem = new Cubo();
+    private Cubo newItem = new Cubo
+    {
+        Name = "",
+        X = 0,
+        Y = 0,
+        Z = 0
+    };
     List<Cubo> CuboItems = new List<Cubo>();
-    PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
+    PaginationState pagination = new PaginationState { ItemsPerPage = 5 };
     private void ShowAddItemModal()
     {
-        newItem = new Cubo();
+        newItem = newItem = new Cubo
+    {
+        Name = "",
+        X = 0,
+        Y = 0,
+        Z = 0
+    };
         isAddItemModalVisible = true;
     }
 
