@@ -42,8 +42,15 @@
                     <PropertyColumn Property="@(d => d.RotY)" Title="Rotation Y" Sortable="true" />
                     <PropertyColumn Property="@(d => d.RotZ)" Title="Rotation Z" Sortable="true" />
                     <PropertyColumn Property="@(d => d.Scale)" Title="Scale" Sortable="true" />
+                
+                   <TemplateColumn Title="Action" Context="cubo">
+                        @if (cubo != null)
+                        {
+                            <button @onclick="@(() => EditCubo(cubo))" class="btn btn-info">Edit</button>
+                            <button @onclick="@(() => RemoveCubo(cubo))" class="btn btn-danger">X</button>
+                        }
+                    </TemplateColumn>
                 </QuickGrid>
-            
                 <div style="width: 100%;">
                     <Paginator State="@pagination" />
                 </div>
@@ -78,7 +85,7 @@
             <input placeholder="RotZ" type="number" @bind="newItem.RotZ" style="width: 100%; margin-bottom: 10px;" />
             <label>Scale</label>
             <input placeholder="Scale" type="number" @bind="newItem.Scale" style="width: 100%; margin-bottom: 10px;" />
-            <button @onclick="SaveNewItem" style="margin-right: 10px;">Salvar</button>
+            <button @onclick="SalvaItem" style="margin-right: 10px;">Salvar</button>
             <button @onclick="CloseAddItemModal">Cancelar</button>
         </div>
     </div>
@@ -88,7 +95,9 @@
 @code {
     private string backgroundColor = "rgb(255, 255, 255)";
     private string menuColor = "rgb(37, 150, 190)";
-     private Viewer viewer = null!;
+    private Viewer viewer = null!;
+    private Cubo? cuboEditando = null;
+
     private Scene scene = new Scene();
     private ViewerSettings settings = new ViewerSettings
     {
@@ -97,6 +106,7 @@
     };
 
     public class Cubo{
+        public Guid Id { get; set; } = Guid.NewGuid();
         public required string Name { get; set; }
         public string? Description { get; set; }
         public required double X { get; set; }
@@ -115,7 +125,8 @@
         Name = "",
         X = 0,
         Y = 0,
-        Z = 0
+        Z = 0,
+        Scale = 1
     };
     List<Cubo> CuboItems = new List<Cubo>();
     PaginationState pagination = new PaginationState { ItemsPerPage = 5 };
@@ -133,19 +144,47 @@
 
     private void CloseAddItemModal() => isAddItemModalVisible = false;
 
-    private async Task SaveNewItem()
+    private async Task SalvaItem()
     {
-        CuboItems.Add(newItem);
-        await AdicionaCubo(newItem);
+        if (cuboEditando != null)
+        {
+            await RemoveCubo(cuboEditando);
+
+            cuboEditando.Name = newItem.Name;
+            cuboEditando.Description = newItem.Description;
+            cuboEditando.X = newItem.X;
+            cuboEditando.Y = newItem.Y;
+            cuboEditando.Z = newItem.Z;
+            cuboEditando.RotX = newItem.RotX;
+            cuboEditando.RotY = newItem.RotY;
+            cuboEditando.RotZ = newItem.RotZ;
+            cuboEditando.Scale = newItem.Scale;
+
+            await AdicionaCubo(cuboEditando);
+
+            if (!CuboItems.Contains(cuboEditando))
+            {
+                CuboItems.Add(cuboEditando);
+            }
+        }
+        else
+        {
+            CuboItems.Add(newItem);
+            await AdicionaCubo(newItem);
+        }
+
+        cuboEditando = null;
         CloseAddItemModal();
     }
+
 
     private async Task AdicionaCubo(Cubo cubo)
     {
         var cube = new Mesh
         {
             Geometry = new BoxGeometry(),
-            Position = new Vector3(cubo.X, cubo.Y, cubo.Z)
+            Position = new Vector3(cubo.X, cubo.Y, cubo.Z),
+            Name = cubo.Id.ToString()
         };
 
         if (cubo.Scale.HasValue)
@@ -155,5 +194,40 @@
 
         scene.Add(cube);
         await viewer.UpdateScene();
+    }
+
+    private void EditCubo(Cubo cubo){
+        cuboEditando = cubo;
+        newItem = new Cubo
+        {
+            Name = cubo.Name,
+            Description = cubo.Description,
+            X = cubo.X,
+            Y = cubo.Y,
+            Z = cubo.Z,
+            RotX = cubo.RotX,
+            RotY = cubo.RotY,
+            RotZ = cubo.RotZ,
+            Scale = cubo.Scale
+        };
+
+        isAddItemModalVisible = true;
+    }
+
+   private async Task RemoveCubo(Cubo cubo){
+        var cubeMesh = scene.Children.OfType<Mesh>().FirstOrDefault(m => m.Name == cubo.Id.ToString());
+
+        if (cubeMesh != null)
+        {
+            scene.Children.Remove(cubeMesh);
+            await viewer.UpdateScene();
+        }
+
+        CuboItems.Remove(cubo);
+    }
+
+    private async Task AtualizaCuboCena(Cubo cubo){
+        await RemoveCubo(cubo);
+        await AdicionaCubo(cubo);
     }
 }
