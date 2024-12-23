@@ -52,8 +52,7 @@
     </div>
 
 
-<Viewer UseDefaultScene=@true></Viewer>
-
+<Viewer @ref="viewer" Scene="@scene" ViewerSettings="@settings" />
 </div>
 
 @if (isAddItemModalVisible)
@@ -89,6 +88,13 @@
 @code {
     private string backgroundColor = "rgb(255, 255, 255)";
     private string menuColor = "rgb(37, 150, 190)";
+     private Viewer viewer = null!;
+    private Scene scene = new Scene();
+    private ViewerSettings settings = new ViewerSettings
+    {
+        CanSelect = true,
+        CanSelectHelpers = false
+    };
 
     public class Cubo{
         public required string Name { get; set; }
@@ -115,21 +121,39 @@
     PaginationState pagination = new PaginationState { ItemsPerPage = 5 };
     private void ShowAddItemModal()
     {
-        newItem = newItem = new Cubo
-    {
-        Name = "",
-        X = 0,
-        Y = 0,
-        Z = 0
-    };
+        newItem = new Cubo
+        {
+            Name = "",
+            X = 0,
+            Y = 0,
+            Z = 0
+        };
         isAddItemModalVisible = true;
     }
 
     private void CloseAddItemModal() => isAddItemModalVisible = false;
 
-    private void SaveNewItem()
+    private async Task SaveNewItem()
     {
         CuboItems.Add(newItem);
+        await AdicionaCubo(newItem);
         CloseAddItemModal();
+    }
+
+    private async Task AdicionaCubo(Cubo cubo)
+    {
+        var cube = new Mesh
+        {
+            Geometry = new BoxGeometry(),
+            Position = new Vector3(cubo.X, cubo.Y, cubo.Z)
+        };
+
+        if (cubo.Scale.HasValue)
+        {
+            cube.Scale = new Vector3(cubo.Scale.Value, cubo.Scale.Value, cubo.Scale.Value);
+        }
+
+        scene.Add(cube);
+        await viewer.UpdateScene();
     }
 }
