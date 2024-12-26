@@ -1,5 +1,6 @@
 ﻿@page "/"
 @rendermode InteractiveServer
+@inject IConfiguration Configuration
 
 <PageTitle>Home</PageTitle>
 
@@ -90,7 +91,26 @@
         </div>
     </div>
 }
-
+<div style="width:100%; height:100%; background-color:@backgroundColor;">
+    <div style="padding: 10px">
+        <h3>Mapa</h3>
+        <RadzenGoogleMap ApiKey="@apiKey" 
+                         MapId="mapa" 
+                         Style="height: 400px" 
+                         Zoom="5" 
+                         Center="@initialPosition" 
+                         MapClick="OnMapClick">
+            <Markers>
+                @if (showMarker)
+                {
+                    <RadzenGoogleMapMarker Title="Localização Personalizada" 
+                                           Position="@markerPosition" />
+                }
+            </Markers>
+        </RadzenGoogleMap>
+        <button @onclick="ToggleMarker">Calcular pontos</button>
+    </div>
+</div>
 
 @code {
     private string backgroundColor = "rgb(255, 255, 255)";
@@ -98,7 +118,12 @@
     private Viewer viewer = null!;
     private Cubo? cuboEditando = null;
 
-    private Scene scene = new Scene();
+    private Scene scene = new Scene{
+        Children =
+        {
+            new GridHelper(100, 50),
+        }
+    };
     private ViewerSettings settings = new ViewerSettings
     {
         CanSelect = true,
@@ -130,8 +155,7 @@
     };
     List<Cubo> CuboItems = new List<Cubo>();
     PaginationState pagination = new PaginationState { ItemsPerPage = 5 };
-    private void ShowAddItemModal()
-    {
+    private void ShowAddItemModal(){
         newItem = new Cubo
         {
             Name = "",
@@ -141,7 +165,6 @@
         };
         isAddItemModalVisible = true;
     }
-
     private void CloseAddItemModal() => isAddItemModalVisible = false;
 
     private async Task SalvaItem()
@@ -176,8 +199,6 @@
         cuboEditando = null;
         CloseAddItemModal();
     }
-
-
     private async Task AdicionaCubo(Cubo cubo)
     {
         var cube = new Mesh
@@ -229,5 +250,25 @@
     private async Task AtualizaCuboCena(Cubo cubo){
         await RemoveCubo(cubo);
         await AdicionaCubo(cubo);
+    }
+
+    private string? apiKey;
+
+    protected override void OnInitialized(){
+        apiKey = Configuration["GoogleMaps:ApiKey"];
+    }
+
+    private GoogleMapPosition initialPosition = new GoogleMapPosition { Lat = -23.55052, Lng = -46.633308 };
+    private GoogleMapPosition markerPosition = new GoogleMapPosition { Lat = -23.55052, Lng = -46.633308 };
+    private bool showMarker = true;
+
+    private void ToggleMarker(){
+        showMarker = !showMarker;
+    }
+
+    private void OnMapClick(GoogleMapClickEventArgs args)
+    {
+        markerPosition = args.Position;
+        showMarker = true;
     }
 }
