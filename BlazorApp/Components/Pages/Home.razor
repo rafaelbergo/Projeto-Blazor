@@ -57,10 +57,34 @@
                 </div>
             </div>
         </div>
+        <div style="flex-grow: 1; display: flex; gap: 20px; padding: 10px;">
+            <div style="flex: 1; display: flex; flex-direction: column;">
+
+                <RadzenGoogleMap ApiKey="@apiKey" 
+                                MapId="63e75307bbe2eeef" 
+                                Style="height: 100%; width: 100%;" 
+                                Zoom="5" 
+                                Center="@initialPosition" 
+                                MapClick="OnMapClick">
+                    <Markers>
+                        @if (showMarker){
+                            <RadzenGoogleMapMarker Title="Ponto Inicial" 
+                                                   Position="@markerPosition"/>
+                        }
+                    </Markers>
+                </RadzenGoogleMap>
+                <div style="padding-top: 10px;">
+                    <button @onclick="ToggleMarker">Calcular pontos</button>
+                </div>
+            </div>
+
+            <div style="flex: 1;">
+            <Viewer @ref="viewer" Scene="@scene" ViewerSettings="@settings" />
+            </div>
+        </div>
     </div>
 
 
-<Viewer @ref="viewer" Scene="@scene" ViewerSettings="@settings" />
 </div>
 
 @if (isAddItemModalVisible)
@@ -91,26 +115,6 @@
         </div>
     </div>
 }
-<div style="width:100%; height:100%; background-color:@backgroundColor;">
-    <div style="padding: 10px">
-        <h3>Mapa</h3>
-        <RadzenGoogleMap ApiKey="@apiKey" 
-                         MapId="mapa" 
-                         Style="height: 400px" 
-                         Zoom="5" 
-                         Center="@initialPosition" 
-                         MapClick="OnMapClick">
-            <Markers>
-                @if (showMarker)
-                {
-                    <RadzenGoogleMapMarker Title="Localização Personalizada" 
-                                           Position="@markerPosition" />
-                }
-            </Markers>
-        </RadzenGoogleMap>
-        <button @onclick="ToggleMarker">Calcular pontos</button>
-    </div>
-</div>
 
 @code {
     private string backgroundColor = "rgb(255, 255, 255)";
@@ -258,16 +262,15 @@
         apiKey = Configuration["GoogleMaps:ApiKey"];
     }
 
-    private GoogleMapPosition initialPosition = new GoogleMapPosition { Lat = -23.55052, Lng = -46.633308 };
-    private GoogleMapPosition markerPosition = new GoogleMapPosition { Lat = -23.55052, Lng = -46.633308 };
+    private GoogleMapPosition initialPosition = new GoogleMapPosition { Lat = -23.5, Lng = -46.5 };
+    private GoogleMapPosition markerPosition = new GoogleMapPosition { Lat = -23.5, Lng = -46.5 };
     private bool showMarker = true;
 
     private void ToggleMarker(){
         showMarker = !showMarker;
     }
 
-    private void OnMapClick(GoogleMapClickEventArgs args)
-    {
+    private void OnMapClick(GoogleMapClickEventArgs args){
         markerPosition = args.Position;
         showMarker = true;
     }
