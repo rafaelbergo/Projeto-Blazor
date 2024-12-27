@@ -66,15 +66,24 @@
                                 Zoom="5" 
                                 Center="@initialPosition" 
                                 MapClick="OnMapClick">
+
                     <Markers>
-                        @if (showMarker){
-                            <RadzenGoogleMapMarker Title="Ponto Inicial" 
-                                                   Position="@markerPosition"/>
+                        @if(clickedPosition != null){
+                            <RadzenGoogleMapMarker Title="Point" Position="@clickedPosition"/>
+                        }
+                        @foreach (var point in pinPoints){
+                            <RadzenGoogleMapMarker Title="Pin Point" Position="@point" />
                         }
                     </Markers>
                 </RadzenGoogleMap>
+
                 <div style="padding-top: 10px;">
-                    <button @onclick="ToggleMarker">Calcular pontos</button>
+                    <button @onclick="() => calculaCoordenadas(new GoogleMapClickEventArgs { Position = clickedPosition })">
+                        Calculate Points
+                    </button>
+                    <button @onclick="() => calculaCoordenadas(new GoogleMapClickEventArgs { Position = clickedPosition })">
+                        Clear Points
+                    </button>
                 </div>
             </div>
 
@@ -83,8 +92,6 @@
             </div>
         </div>
     </div>
-
-
 </div>
 
 @if (isAddItemModalVisible)
@@ -263,15 +270,35 @@
     }
 
     private GoogleMapPosition initialPosition = new GoogleMapPosition { Lat = -23.5, Lng = -46.5 };
-    private GoogleMapPosition markerPosition = new GoogleMapPosition { Lat = -23.5, Lng = -46.5 };
-    private bool showMarker = true;
 
-    private void ToggleMarker(){
-        showMarker = !showMarker;
-    }
+    private GoogleMapPosition? clickedPosition;
 
     private void OnMapClick(GoogleMapClickEventArgs args){
-        markerPosition = args.Position;
-        showMarker = true;
+        clickedPosition = args.Position;
+    }
+
+    public void calculaCoordenadas(GoogleMapClickEventArgs args){
+        if(args.Position == null){
+            return;
+        }
+        
+        var x = args.Position.Lat;
+        var y = args.Position.Lng;
+
+        foreach (var cubo in CuboItems){
+
+            var newLat = cubo.X + x;
+            var newLng = cubo.Y + y;
+
+            AdicionaPinPoint(new GoogleMapPosition { Lat = newLat, Lng = newLng });
+        }
+
+    }
+
+    private List<GoogleMapPosition> pinPoints = new List<GoogleMapPosition>();
+
+    private void AdicionaPinPoint(GoogleMapPosition position){
+        pinPoints.Add(position);
+        StateHasChanged();
     }
 }
