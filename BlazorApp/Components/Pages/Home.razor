@@ -72,7 +72,7 @@
                             <RadzenGoogleMapMarker Title="Point" Position="@clickedPosition"/>
                         }
                         @foreach (var point in pinPoints){
-                            <RadzenGoogleMapMarker Title="Pin Point" Position="@point" />
+                             <RadzenGoogleMapMarker Title="Pin Point" Position="@point" />
                         }
                     </Markers>
                 </RadzenGoogleMap>
@@ -81,7 +81,7 @@
                     <button @onclick="() => calculaCoordenadas(new GoogleMapClickEventArgs { Position = clickedPosition })">
                         Calculate Points
                     </button>
-                    <button @onclick="() => calculaCoordenadas(new GoogleMapClickEventArgs { Position = clickedPosition })">
+                    <button @onclick="ClearPoints">
                         Clear Points
                     </button>
                 </div>
@@ -299,6 +299,12 @@
 
     private void AdicionaPinPoint(GoogleMapPosition position){
         pinPoints.Add(position);
+        StateHasChanged();
+    }
+
+    private void ClearPoints(){
+        pinPoints.Clear();
+        clickedPosition = null;
         StateHasChanged();
     }
 }
