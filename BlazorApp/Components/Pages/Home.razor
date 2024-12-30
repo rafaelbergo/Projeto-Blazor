@@ -224,6 +224,16 @@
             cube.Scale = new Vector3(cubo.Scale.Value, cubo.Scale.Value, cubo.Scale.Value);
         }
 
+        if(cubo.RotX.HasValue || cubo.RotY.HasValue || cubo.RotZ.HasValue)
+        {
+            var rotation = new Euler{
+                X = cubo.RotX.HasValue ? cubo.RotX.Value * Math.PI / 180 : 0,
+                Y = cubo.RotY.HasValue ? cubo.RotY.Value * Math.PI / 180 : 0,
+                Z = cubo.RotZ.HasValue ? cubo.RotZ.Value * Math.PI / 180 : 0
+            };
+            cube.Rotation = rotation;
+        }
+
         scene.Add(cube);
         await viewer.UpdateScene();
     }
