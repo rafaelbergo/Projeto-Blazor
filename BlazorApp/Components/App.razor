@@ -11,6 +11,16 @@
     <link rel="icon" type="image/png" href="favicon.png" />
     <RadzenTheme Theme="material" @rendermode="InteractiveServer" />
     <HeadOutlet />
+
+    <script type="importmap">
+        {
+            "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.172.0/build/three.module.js",
+            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.172.0/examples/jsm/"
+            }
+        }
+    </script>
+    <script type="module" src="js/threeInterop.js"></script>
 </head>
 
 <body>

@@ -1,6 +1,7 @@
 ﻿@page "/"
 @rendermode InteractiveServer
 @inject IConfiguration Configuration
+@inject IJSRuntime JSRuntime
 
 <PageTitle>Home</PageTitle>
 
@@ -21,7 +22,7 @@
         <div style="padding: 10px">
             <div style="max-width: 100%; width: fit-content;">
                 <div style="display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-bottom: 10px;">
-                    <button @onclick="ShowAddItemModal">Add Item</button>
+                    <button @onclick="ShowAddItemModal" class="custom-button">Add Item</button>
                     <div class="page-size-chooser">
                         Items per page:
                         <select @bind="@pagination.ItemsPerPage">
@@ -48,7 +49,7 @@
                         @if (cubo != null)
                         {
                             <button @onclick="@(() => EditCubo(cubo))" class="btn btn-info">Edit</button>
-                            <button @onclick="@(() => RemoveCubo(cubo))" class="btn btn-danger">X</button>
+                            <button @onclick="@(() => RemoveCubo(cubo))" class="btn btn-danger">x</button>
                         }
                     </TemplateColumn>
                 </QuickGrid>
@@ -78,10 +79,10 @@
                 </RadzenGoogleMap>
 
                 <div style="padding-top: 10px;">
-                    <button @onclick="() => calculaCoordenadas(new GoogleMapClickEventArgs { Position = clickedPosition })">
+                    <button class="custom-button" @onclick="() => calculaCoordenadas(new GoogleMapClickEventArgs { Position = clickedPosition })">
                         Calculate Points
                     </button>
-                    <button @onclick="ClearPoints">
+                    <button class="custom-button" @onclick="ClearPoints">
                         Clear Points
                     </button>
                 </div>
@@ -93,6 +94,11 @@
         </div>
     </div>
 </div>
+
+<canvas id="threeCanvas" style="width: 100%; height: 500px;"></canvas>
+<button @onclick="InitializeScene">Iniciar Cena</button>
+<button @onclick="InitializeTransformControls">Enable Transform Controls</button>
+
 
 @if (isAddItemModalVisible)
 {
@@ -117,8 +123,8 @@
             <input placeholder="RotZ" type="number" @bind="newItem.RotZ" style="width: 100%; margin-bottom: 10px;" />
             <label>Scale</label>
             <input placeholder="Scale" type="number" @bind="newItem.Scale" style="width: 100%; margin-bottom: 10px;" />
-            <button @onclick="SalvaItem" style="margin-right: 10px;">Salvar</button>
-            <button @onclick="CloseAddItemModal">Cancelar</button>
+            <button @onclick="SalvaItem" style="margin-right: 10px;" class="custom-button">Salvar</button>
+            <button @onclick="CloseAddItemModal" class="custom-button">Cancelar</button>
         </div>
     </div>
 }
@@ -333,4 +339,15 @@
 
         return new GoogleMapPosition { Lat = novaLatitude, Lng = novaLongitude };
     }
+
+    private async Task InitializeScene()
+    {
+        await JSRuntime.InvokeVoidAsync("initThreeScene", "threeCanvas");
+    }
+
+    private async Task InitializeTransformControls()
+    {
+        await JSRuntime.InvokeVoidAsync("initTransformControls", "objectToTransform");
+    }
+
 }
