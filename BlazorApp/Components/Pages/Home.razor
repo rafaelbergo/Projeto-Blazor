@@ -97,7 +97,6 @@
 
 <canvas id="threeCanvas" style="width: 100%; height: 500px;"></canvas>
 <button @onclick="InitializeScene">Iniciar Cena</button>
-<button @onclick="InitializeTransformControls">Enable Transform Controls</button>
 
 
 @if (isAddItemModalVisible)
@@ -342,12 +341,15 @@
 
     private async Task InitializeScene()
     {
-        await JSRuntime.InvokeVoidAsync("initThreeScene", "threeCanvas");
-    }
-
-    private async Task InitializeTransformControls()
-    {
-        await JSRuntime.InvokeVoidAsync("initTransformControls", "objectToTransform");
+        try
+        {
+            // Chama a função JavaScript para inicializar a cena
+            await JSRuntime.InvokeVoidAsync("initThreeScene", "threeCanvas");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error initializing scene: {ex.Message}");
+        }
     }
 
 }
