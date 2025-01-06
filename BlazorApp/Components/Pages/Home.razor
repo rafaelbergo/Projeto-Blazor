@@ -95,8 +95,7 @@
     </div>
 </div>
 
-<canvas id="threeCanvas" style="width: 100%; height: 500px;"></canvas>
-<button @onclick="InitializeScene">Iniciar Cena</button>
+<div id="threejs-container" style="width: 100%; height: 100vh;"></div>
 
 
 @if (isAddItemModalVisible)
@@ -339,17 +338,13 @@
         return new GoogleMapPosition { Lat = novaLatitude, Lng = novaLongitude };
     }
 
-    private async Task InitializeScene()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        try
+        if (firstRender)
         {
-            // Chama a função JavaScript para inicializar a cena
-            await JSRuntime.InvokeVoidAsync("initThreeScene", "threeCanvas");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error initializing scene: {ex.Message}");
+            await JSRuntime.InvokeVoidAsync("initScene");
         }
     }
 
+    
 }

@@ -12,15 +12,18 @@
     <RadzenTheme Theme="material" @rendermode="InteractiveServer" />
     <HeadOutlet />
 
-    <script type="module" src="js/initThree.js"></script>
-
+    
 </head>
 
 <body>
     <Routes />
     <script src="_content/Radzen.Blazor/Radzen.Blazor.js?v=@(typeof(Radzen.Colors).Assembly.GetName().Version)"></script>
-
     <script src="_framework/blazor.web.js"></script>
+    <script src="js/three.module.js"></script>
+    <script src="js/TransformControls.js"></script>
+    <script src="js/OrbitControls.js"></script>
+    <script src="js/scene.js"></script>
+
 </body>
 
 </html>
