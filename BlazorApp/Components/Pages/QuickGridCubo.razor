@@ -1,0 +1,122 @@
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-bottom: 10px;">
+    <button @onclick="ShowAddItemModal">Add Item</button>
+    <div class="page-size-chooser">
+        Items per page:
+        <select @bind="@pagination.ItemsPerPage">
+            <option>5</option>
+            <option>10</option>
+            <option>20</option>
+            <option>50</option>
+        </select>
+    </div>
+</div>
+
+<QuickGrid Items="@CuboItems.AsQueryable()" TItem="Cubo" Pagination="pagination">
+    <PropertyColumn Property="@(d => d.Name)" Title="Name" Sortable="true" />
+    <PropertyColumn Property="@(d => d.Description)" Title="Description" Sortable="false" />
+    <PropertyColumn Property="@(d => d.X)" Title="X" Sortable="true" />
+    <PropertyColumn Property="@(d => d.Y)" Title="Y" Sortable="true" />
+    <PropertyColumn Property="@(d => d.Z)" Title="Z" Sortable="true" />
+    <PropertyColumn Property="@(d => d.RotX)" Title="Rotation X" Sortable="true" />
+    <PropertyColumn Property="@(d => d.RotY)" Title="Rotation Y" Sortable="true" />
+    <PropertyColumn Property="@(d => d.RotZ)" Title="Rotation Z" Sortable="true" />
+    <PropertyColumn Property="@(d => d.Scale)" Title="Scale" Sortable="true" />
+
+    <TemplateColumn Title="Action" Context="cubo">
+        @if (cubo != null)
+        {
+            <button @onclick="@(() => EditCubo(cubo))" class="btn btn-info">Edit</button>
+            <button @onclick="@(() => RemoveCubo(cubo))" class="btn btn-danger">X</button>
+        }
+    </TemplateColumn>
+</QuickGrid>
+
+<div style="width: 100%;">
+    <Paginator State="@pagination" />
+</div>
+
+
+@if (isAddItemModalVisible)
+{
+    <div class="modal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); display: flex; justify-content: center; align-items: center;">
+        <div class="modal-content" style="background-color: white; padding: 20px; border-radius: 5px; width: 400px;">
+            <h3>Add Item</h3>
+            <label>Name</label>
+            <input placeholder="Name" @bind="newItem.Name" style="width: 100%; margin-bottom: 10px;" required />
+            <label>Description</label>
+            <input placeholder="Description" @bind="newItem.Description" style="width: 100%; margin-bottom: 10px;" />
+            <label>X</label>
+            <input placeholder="X" type="number" @bind="newItem.X" style="width: 100%; margin-bottom: 10px;" />
+            <label>Y</label>
+            <input placeholder="Y" type="number" @bind="newItem.Y" style="width: 100%; margin-bottom: 10px;" />
+            <label>Z</label>
+            <input placeholder="Z" type="number" @bind="newItem.Z" style="width: 100%; margin-bottom: 10px;" />
+            <label>RotX</label>
+            <input placeholder="RotX" type="number" @bind="newItem.RotX" style="width: 100%; margin-bottom: 10px;" />
+            <label>RotY</label>
+            <input placeholder="RotY" type="number" @bind="newItem.RotY" style="width: 100%; margin-bottom: 10px;" />
+            <label>RotZ</label>
+            <input placeholder="RotZ" type="number" @bind="newItem.RotZ" style="width: 100%; margin-bottom: 10px;" />
+            <label>Scale</label>
+            <input placeholder="Scale" type="number" @bind="newItem.Scale" style="width: 100%; margin-bottom: 10px;" />
+            <button @onclick="SalvaItem" style="margin-right: 10px;">Salvar</button>
+            <button @onclick="CloseAddItemModal">Cancelar</button>
+        </div>
+    </div>
+}
+
+@code{
+    [Parameter] public List<Cubo> CuboItems { get; set; } = new List<Cubo>();
+    [Parameter] public EventCallback<Cubo> OnEditCubo { get; set; }
+    [Parameter] public EventCallback<Cubo> OnRemoveCubo { get; set; }
+    [Parameter] public EventCallback<Cubo> OnAddCubo { get; set; }
+    [Parameter] public PaginationState pagination { get; set; } = new PaginationState { ItemsPerPage = 5 };
+
+    private bool isAddItemModalVisible = false;
+    private Cubo newItem = new Cubo
+    {
+        Name = "",
+        X = 0,
+        Y = 0,
+        Z = 0,
+        Scale = 1
+    };
+
+    private void ShowAddItemModal()
+    {
+        newItem = new Cubo
+        {
+            Name = "",
+            X = 0,
+            Y = 0,
+            Z = 0
+        };
+        isAddItemModalVisible = true;
+    }
+
+    private void CloseAddItemModal() => isAddItemModalVisible = false;
+
+    private async Task SalvaItem()
+    {
+        CuboItems.Add(newItem);
+
+        await OnAddCubo.InvokeAsync(newItem);
+
+        CloseAddItemModal();
+    }
+
+    private async Task EditCubo(Cubo cubo)
+    {
+        await OnEditCubo.InvokeAsync(cubo);
+    }
+
+    private async Task RemoveCubo(Cubo cubo)
+    {
+        CuboItems.Remove(cubo);
+
+        await OnRemoveCubo.InvokeAsync(cubo);
+    }
+}
+
+
+}

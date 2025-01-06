@@ -1,0 +1,35 @@
+<div style="width: 275px; background-color: @MenuColor; color: black; padding: 10px; box-shadow: 2px 0 5px rgba(0,0,0,0.1);">
+    <h3>BlazorApp</h3>
+
+    <p style="color:black;">Background color: </p>
+    <RadzenColorPicker @bind-Value="@BackgroundColor" ShowHSV="true" ShowRGBA="false" ShowColors="true" ShowButton="false" Change="OnBackgroundColorChanged" />
+    
+    <p style="color:black;">Menu color: </p>
+    <RadzenColorPicker @bind-Value="@MenuColor" ShowHSV="true" ShowRGBA="false" ShowColors="true" ShowButton="false" Change="OnMenuColorChanged" />
+</div>
+
+@code {
+    [Parameter]
+    public string BackgroundColor { get; set; } = "rgb(255, 255, 255)";
+
+    [Parameter]
+    public EventCallback<string> BackgroundColorChanged { get; set; }
+
+    [Parameter]
+    public string MenuColor { get; set; } = "rgb(37, 150, 190)";
+
+    [Parameter]
+    public EventCallback<string> MenuColorChanged { get; set; }
+
+    private async Task OnBackgroundColorChanged(string value)
+    {
+        BackgroundColor = value;
+        await BackgroundColorChanged.InvokeAsync(value);
+    }
+
+    private async Task OnMenuColorChanged(string value)
+    {
+        MenuColor = value;
+        await MenuColorChanged.InvokeAsync(value);
+    }
+}

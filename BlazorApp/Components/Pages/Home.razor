@@ -2,20 +2,13 @@
 @rendermode InteractiveServer
 @inject IConfiguration Configuration
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Blazor Project</PageTitle>
 
 <div style="display: flex; height: 100vh;">
 
     <!-- Menu lateral -->
-    <div style="width: 275px; background-color: @menuColor; color: black; padding: 10px; box-shadow: 2px 0 5px rgba(0,0,0,0.1);">
-        <h3>BlazorApp</h3>
-
-        <p style="color:black;">Background color: </p>
-        <RadzenColorPicker @bind-Value="@backgroundColor" ShowHSV="true" ShowRGBA="false" ShowColors="true" ShowButton="false" />
-        <p style="color:black;">Menu color: </p>
-        <RadzenColorPicker @bind-Value="@menuColor" ShowHSV="true" ShowRGBA="false" ShowColors="true" ShowButton="false" />
-    </div>
-
+    <MenuLateral BackgroundColor="@backgroundColor" BackgroundColorChanged="OnBackgroundColorChanged" MenuColor="@menuColor" MenuColorChanged="OnMenuColorChanged" />
+    
     <!-- Conteudo principal -->
     <div style="width:100%; height:100%; background-color:@backgroundColor;">
         <div style="padding: 10px">
@@ -124,8 +117,21 @@
 }
 
 @code {
+    // Menu Lateral
     private string backgroundColor = "rgb(255, 255, 255)";
     private string menuColor = "rgb(37, 150, 190)";
+
+    private void OnBackgroundColorChanged(string newColor)
+    {
+        backgroundColor = newColor;
+    }
+
+    private void OnMenuColorChanged(string newColor)
+    {
+        menuColor = newColor;
+    }
+
+    //
     private Viewer viewer = null!;
     private Cubo? cuboEditando = null;
 
@@ -141,20 +147,6 @@
         CanSelectHelpers = false
     };
 
-    public class Cubo{
-        public Guid Id { get; set; } = Guid.NewGuid();
-        public required string Name { get; set; }
-        public string? Description { get; set; }
-        public required double X { get; set; }
-        public required double Y { get; set; }
-        public required double Z { get; set; }
-        public double? RotX { get; set; }
-        public double? RotY { get; set; }
-        public double? RotZ { get; set; }
-        public double? Scale { get; set; }
-
-        public Cubo() {}
-    }
     private bool isAddItemModalVisible = false;
     private Cubo newItem = new Cubo
     {
