@@ -1,0 +1,94 @@
+@inject IConfiguration Configuration
+
+<div style="flex: 1; display: flex; flex-direction: column;">
+    <RadzenGoogleMap ApiKey="@apiKey" 
+                    MapId="63e75307bbe2eeef" 
+                    Style="height: 100%; width: 100%;" 
+                    Zoom="5" 
+                    Center="@initialPosition" 
+                    MapClick="HandleMapClick">
+
+        <Markers>
+            @if(clickedPosition != null){
+                <RadzenGoogleMapMarker Title="Point" Position="@clickedPosition"/>
+            }
+            @foreach (var point in pinPoints){
+                    <RadzenGoogleMapMarker Title="Pin Point" Position="@point" />
+            }
+        </Markers>
+    </RadzenGoogleMap>
+
+    <div style="padding-top: 10px;">
+        <button @onclick="() => calculaCoordenadas(new GoogleMapClickEventArgs { Position = clickedPosition })">
+            Calculate Points
+        </button>
+        <button @onclick="ClearPoints">
+            Clear Points
+        </button>
+    </div>
+</div>
+
+@code {
+    private string? apiKey;
+
+    protected override void OnInitialized(){
+        apiKey = Configuration["GoogleMaps:ApiKey"];
+    }
+    public GoogleMapPosition initialPosition { get; set; } = new GoogleMapPosition { Lat = -23.5, Lng = -46.5 };
+    
+    [Parameter] public GoogleMapPosition? clickedPosition { get; set; }
+    
+    [Parameter] public List<GoogleMapPosition> pinPoints { get; set; } = new List<GoogleMapPosition>();
+    [Parameter] public required List<Cubo> CuboItems { get; set; }
+
+
+    private void HandleMapClick(GoogleMapClickEventArgs args)
+    {
+        if(args.Position != null){
+            clickedPosition = args.Position;
+            //pinPoints.Add(args.Position);
+        }
+    }
+
+    public void calculaCoordenadas(GoogleMapClickEventArgs args){
+        if(args.Position != null){
+            var x = args.Position.Lat;
+            var y = args.Position.Lng;
+
+            foreach (var cubo in CuboItems){
+                var newLat = cubo.X + x;
+                var newLng = cubo.Y + y;
+
+                var newPositionMeters = ConverteDistancia(args.Position, cubo.X,  cubo.Y);
+                AdicionaPinPoint(newPositionMeters);
+            }
+        }
+    }
+
+    private void AdicionaPinPoint(GoogleMapPosition position){
+        pinPoints.Add(position);
+        StateHasChanged();
+    }
+
+    private void ClearPoints(){
+        pinPoints.Clear();
+        clickedPosition = null;
+        StateHasChanged();
+    }
+
+    // converte a distancia de graus para metros e retorna em graus
+    private GoogleMapPosition ConverteDistancia(GoogleMapPosition pontoInicial, double distanciaX, double distanciaY){
+        const double RaioTerra = 6378137;
+
+        double xMetros = pontoInicial.Lng * Math.PI / 180 * RaioTerra * Math.Cos(pontoInicial.Lat * Math.PI / 180);
+        double yMetros = pontoInicial.Lat * Math.PI / 180 * RaioTerra;
+
+        double novoXMetros = xMetros + distanciaX;
+        double novoYMetros = yMetros + distanciaY;
+
+        double novaLatitude = (novoYMetros / RaioTerra) * 180 / Math.PI;
+        double novaLongitude = (novoXMetros / (RaioTerra * Math.Cos(novaLatitude * Math.PI / 180))) * 180 / Math.PI;
+
+        return new GoogleMapPosition { Lat = novaLatitude, Lng = novaLongitude };
+    }
+}

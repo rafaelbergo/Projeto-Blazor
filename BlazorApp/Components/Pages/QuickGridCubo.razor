@@ -1,3 +1,4 @@
+
 <div style="display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-bottom: 10px;">
     <button @onclick="ShowAddItemModal">Add Item</button>
     <div class="page-size-chooser">
@@ -31,16 +32,13 @@
     </TemplateColumn>
 </QuickGrid>
 
-<div style="width: 100%;">
-    <Paginator State="@pagination" />
-</div>
-
+<Paginator State="@pagination" />
 
 @if (isAddItemModalVisible)
 {
     <div class="modal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); display: flex; justify-content: center; align-items: center;">
         <div class="modal-content" style="background-color: white; padding: 20px; border-radius: 5px; width: 400px;">
-            <h3>Add Item</h3>
+            <h3>@(cuboEditando == null ? "Add Item" : "Edit Item")</h3>
             <label>Name</label>
             <input placeholder="Name" @bind="newItem.Name" style="width: 100%; margin-bottom: 10px;" required />
             <label>Description</label>
@@ -59,13 +57,15 @@
             <input placeholder="RotZ" type="number" @bind="newItem.RotZ" style="width: 100%; margin-bottom: 10px;" />
             <label>Scale</label>
             <input placeholder="Scale" type="number" @bind="newItem.Scale" style="width: 100%; margin-bottom: 10px;" />
-            <button @onclick="SalvaItem" style="margin-right: 10px;">Salvar</button>
-            <button @onclick="CloseAddItemModal">Cancelar</button>
+            <button @onclick="SalvaItem" style="margin-right: 10px;">Save</button>
+            <button @onclick="CloseAddItemModal">Cancel</button>
         </div>
     </div>
 }
 
-@code{
+@code {
+    [Parameter] public Scene? scene { get; set; }
+    [Parameter] public Viewer? viewer { get; set; }
     [Parameter] public List<Cubo> CuboItems { get; set; } = new List<Cubo>();
     [Parameter] public EventCallback<Cubo> OnEditCubo { get; set; }
     [Parameter] public EventCallback<Cubo> OnRemoveCubo { get; set; }
@@ -82,8 +82,11 @@
         Scale = 1
     };
 
+    private Cubo? cuboEditando = null;
+
     private void ShowAddItemModal()
     {
+        cuboEditando = null; // Clear edit state
         newItem = new Cubo
         {
             Name = "",
@@ -98,25 +101,96 @@
 
     private async Task SalvaItem()
     {
-        CuboItems.Add(newItem);
+        if (cuboEditando != null)
+        {
+            // Edição de cubo
+            await RemoveCubo(cuboEditando);
 
-        await OnAddCubo.InvokeAsync(newItem);
+            cuboEditando.Name = newItem.Name;
+            cuboEditando.Description = newItem.Description;
+            cuboEditando.X = newItem.X;
+            cuboEditando.Y = newItem.Y;
+            cuboEditando.Z = newItem.Z;
+            cuboEditando.RotX = newItem.RotX;
+            cuboEditando.RotY = newItem.RotY;
+            cuboEditando.RotZ = newItem.RotZ;
+            cuboEditando.Scale = newItem.Scale;
 
+            await AdicionaCubo(cuboEditando);
+
+            if (!CuboItems.Contains(cuboEditando))
+            {
+                CuboItems.Add(cuboEditando);
+            }
+        }
+        else
+        {
+            // Adição de novo cubo
+            CuboItems.Add(newItem);
+            await AdicionaCubo(newItem);
+        }
+
+        cuboEditando = null;
         CloseAddItemModal();
     }
 
-    private async Task EditCubo(Cubo cubo)
+    private async Task AdicionaCubo(Cubo cubo)
     {
-        await OnEditCubo.InvokeAsync(cubo);
+        var cube = new Mesh
+        {
+            Geometry = new BoxGeometry(),
+            Position = new Vector3(cubo.X, cubo.Y, cubo.Z),
+            Name = cubo.Id.ToString()
+        };
+
+        if (cubo.Scale.HasValue)
+        {
+            cube.Scale = new Vector3(cubo.Scale.Value, cubo.Scale.Value, cubo.Scale.Value);
+        }
+
+        if (cubo.RotX.HasValue || cubo.RotY.HasValue || cubo.RotZ.HasValue)
+        {
+            var rotation = new Euler
+            {
+                X = cubo.RotX.HasValue ? cubo.RotX.Value * Math.PI / 180 : 0,
+                Y = cubo.RotY.HasValue ? cubo.RotY.Value * Math.PI / 180 : 0,
+                Z = cubo.RotZ.HasValue ? cubo.RotZ.Value * Math.PI / 180 : 0
+            };
+            cube.Rotation = rotation;
+        }
+
+        scene.Add(cube);
+        await viewer.UpdateScene();
     }
 
     private async Task RemoveCubo(Cubo cubo)
     {
+        var cubeMesh = scene.Children.OfType<Mesh>().FirstOrDefault(m => m.Name == cubo.Id.ToString());
+
+        if (cubeMesh != null)
+        {
+            scene.Children.Remove(cubeMesh);
+            await viewer.UpdateScene();
+        }
+
         CuboItems.Remove(cubo);
-
-        await OnRemoveCubo.InvokeAsync(cubo);
     }
-}
 
-
+    private void EditCubo(Cubo cubo)
+    {
+        cuboEditando = cubo;
+        newItem = new Cubo
+        {
+            Name = cubo.Name,
+            Description = cubo.Description,
+            X = cubo.X,
+            Y = cubo.Y,
+            Z = cubo.Z,
+            RotX = cubo.RotX,
+            RotY = cubo.RotY,
+            RotZ = cubo.RotZ,
+            Scale = cubo.Scale
+        };
+        isAddItemModalVisible = true;
+    }
 }
