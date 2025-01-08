@@ -44,7 +44,7 @@ function init() {
     orbit = new OrbitControls(currentCamera, renderer.domElement);
     orbit.update();
     orbit.addEventListener('change', render);
-
+    /*
     function addCube(x, y, z) {
         const cube = new THREE.Mesh(geometry, material);
         cube.position.set(x, y, z);
@@ -69,7 +69,7 @@ function init() {
     addCube(0, 0, 0);
     addCube(2, 0, 0);
     addCube(0, 2, 0);
-    addCube(0, 0, 2);
+    addCube(0, 0, 2);*/
 
     window.addEventListener('resize', onWindowResize);
 
@@ -151,3 +151,38 @@ function onWindowResize() {
 function render() {
     renderer.render(scene, currentCamera);
 }
+
+export function addCubeToScene(x, y, z, scale, rotX, rotY, rotZ) {
+    const texture = new THREE.TextureLoader().load('js/crate.gif', render);
+    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+
+    const geometry = new THREE.BoxGeometry();
+    const material = new THREE.MeshLambertMaterial({ map: texture });
+
+    const cube = new THREE.Mesh(geometry, material);
+
+    cube.position.set(x, y, z);
+    cube.scale.set(scale, scale, scale);
+    cube.rotation.set(rotX * Math.PI / 180, rotY * Math.PI / 180, rotZ * Math.PI / 180);
+
+    scene.add(cube);
+    const control = new TransformControls(currentCamera, renderer.domElement);
+    control.attach(cube);
+    scene.add(control);
+
+    controls.push(control); 
+
+    control.addEventListener('change', render);
+
+    control.addEventListener('dragging-changed', function (event) {
+        orbit.enabled = !event.value;
+    });
+
+    const gizmo = control.getHelper();
+    scene.add(gizmo);
+
+    render();
+}
+
+window.addCubeToScene = addCubeToScene;
