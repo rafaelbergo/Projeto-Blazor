@@ -1,3 +1,4 @@
 /BlazorApp/bin/
 /BlazorApp/obj
 /BlazorApp/appsettings.json
+node_modules/

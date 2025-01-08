@@ -1,6 +1,7 @@
 ﻿@page "/"
 @rendermode InteractiveServer
 @inject IConfiguration Configuration
+@inject IJSRuntime JSRuntime
 
 <PageTitle>Blazor Project</PageTitle>
 
@@ -51,7 +52,7 @@
             </div>
         </div>
         <div style="flex-grow: 1; display: flex; gap: 20px; padding: 10px;">
-            <MapaGoogle CuboItems="CuboItems" />
+            <!--   <MapaGoogle CuboItems="CuboItems" />-->
 
             <div style="flex: 1;">
             <Viewer @ref="viewer" Scene="@scene" ViewerSettings="@settings" />
@@ -59,6 +60,10 @@
         </div>
     </div>
 </div>
+
+<canvas id="threeCanvas" width="800" height="600"></canvas>
+<button @onclick="InitializeThreeJS">Iniciar</button>
+
 
 @if (isAddItemModalVisible)
 {
@@ -236,5 +241,13 @@
     private async Task AtualizaCuboCena(Cubo cubo){
         await RemoveCubo(cubo);
         await AdicionaCubo(cubo);
-    }   
+    }  
+    
+    private async Task InitializeThreeJS()
+    {
+        await JSRuntime.InvokeVoidAsync("setupThreeJS", "threeCanvas");
+    }
+
+
+    
 }
