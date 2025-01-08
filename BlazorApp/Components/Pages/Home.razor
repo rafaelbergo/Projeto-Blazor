@@ -57,7 +57,7 @@
             <div style="flex: 1;">
                 <canvas id="threeCanvas" width="400" height="300"></canvas>
 
-            <!--<Viewer @ref="viewer" Scene="@scene" ViewerSettings="@settings" /> -->
+                <!--<Viewer @ref="viewer" Scene="@scene" ViewerSettings="@settings" /> -->
             </div>
         </div>
     </div>
@@ -182,7 +182,7 @@
     }
     private async Task AdicionaCubo(Cubo cubo)
     {
-        await JSRuntime.InvokeVoidAsync("addCubeToScene", cubo.X, cubo.Y, cubo.Z, cubo.Scale ?? 1, cubo.RotX ?? 0, cubo.RotY ?? 0, cubo.RotZ ?? 0);
+        await JSRuntime.InvokeVoidAsync("addCubeToScene", cubo.X, cubo.Y, cubo.Z, cubo.Scale ?? 1, cubo.RotX ?? 0, cubo.RotY ?? 0, cubo.RotZ ?? 0, cubo.Id.ToString());
         /*
         var cube = new Mesh
         {
@@ -229,13 +229,15 @@
     }
 
    private async Task RemoveCubo(Cubo cubo){
+        await JSRuntime.InvokeVoidAsync("removeCubeFromScene", cubo.Id.ToString());
+        /*
         var cubeMesh = scene.Children.OfType<Mesh>().FirstOrDefault(m => m.Name == cubo.Id.ToString());
-
+        
         if (cubeMesh != null)
         {
             scene.Children.Remove(cubeMesh);
             await viewer.UpdateScene();
-        }
+        }*/
 
         CuboItems.Remove(cubo);
     }

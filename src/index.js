@@ -1,9 +1,10 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { TransformControls } from 'three/addons/controls/TransformControls.js';
+import { ViewHelper } from 'three/addons/helpers/ViewHelper.js';
 
-let cameraPersp, cameraOrtho, currentCamera;
-let scene, renderer, orbit;
+let cameraPersp, currentCamera;
+let scene, renderer, orbit, helper;
 let controls = [];
 
 init();
@@ -13,11 +14,10 @@ function init() {
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.autoClear = false;
     document.body.appendChild(renderer.domElement);
 
     const aspect = window.innerWidth / window.innerHeight;
-
-    const frustumSize = 5;
 
     cameraPersp = new THREE.PerspectiveCamera(50, aspect, 0.1, 100);
     currentCamera = cameraPersp;
@@ -33,17 +33,19 @@ function init() {
     const light = new THREE.DirectionalLight(0xffffff, 4);
     light.position.set(1, 1, 1);
     scene.add(light);
-
+/*
     const texture = new THREE.TextureLoader().load('js/crate.gif', render);
     texture.colorSpace = THREE.SRGBColorSpace;
     texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
 
     const geometry = new THREE.BoxGeometry();
-    const material = new THREE.MeshLambertMaterial({ map: texture });
+    const material = new THREE.MeshLambertMaterial({ map: texture });*/
 
     orbit = new OrbitControls(currentCamera, renderer.domElement);
     orbit.update();
     orbit.addEventListener('change', render);
+
+    helper = new ViewHelper(currentCamera, renderer.domElement);
     /*
     function addCube(x, y, z) {
         const cube = new THREE.Mesh(geometry, material);
@@ -149,10 +151,12 @@ function onWindowResize() {
 }
 
 function render() {
+    renderer.clear();
     renderer.render(scene, currentCamera);
+    helper.render(renderer);
 }
 
-export function addCubeToScene(x, y, z, scale, rotX, rotY, rotZ) {
+export function addCubeToScene(x, y, z, scale, rotX, rotY, rotZ, id) {
     const texture = new THREE.TextureLoader().load('js/crate.gif', render);
     texture.colorSpace = THREE.SRGBColorSpace;
     texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
@@ -165,6 +169,7 @@ export function addCubeToScene(x, y, z, scale, rotX, rotY, rotZ) {
     cube.position.set(x, y, z);
     cube.scale.set(scale, scale, scale);
     cube.rotation.set(rotX * Math.PI / 180, rotY * Math.PI / 180, rotZ * Math.PI / 180);
+    cube.name = id;
 
     scene.add(cube);
     const control = new TransformControls(currentCamera, renderer.domElement);
@@ -185,4 +190,21 @@ export function addCubeToScene(x, y, z, scale, rotX, rotY, rotZ) {
     render();
 }
 
+export function removeCubeFromScene(id) {
+    const cubeObject = scene.getObjectByName(id.toString());
+
+    if (cubeObject) {
+        const control = controls.find(c => c.object === cubeObject);
+
+        if (control) {
+            control.detach();
+            scene.remove(control);
+            controls = controls.filter(c => c !== control);
+        }
+        scene.remove(cubeObject);
+        render();
+    }
+}
+
 window.addCubeToScene = addCubeToScene;
+window.removeCubeFromScene = removeCubeFromScene;
