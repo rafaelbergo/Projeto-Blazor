@@ -55,14 +55,15 @@
             <!--   <MapaGoogle CuboItems="CuboItems" />-->
 
             <div style="flex: 1;">
-            <Viewer @ref="viewer" Scene="@scene" ViewerSettings="@settings" />
+                <canvas id="threeCanvas" width="400" height="300"></canvas>
+
+            <!--<Viewer @ref="viewer" Scene="@scene" ViewerSettings="@settings" /> -->
             </div>
         </div>
     </div>
 </div>
 
-<canvas id="threeCanvas" width="800" height="600"></canvas>
-<button @onclick="InitializeThreeJS">Iniciar</button>
+<!--<canvas id="threeCanvas" width="800" height="600"></canvas> -->
 
 
 @if (isAddItemModalVisible)
@@ -243,10 +244,7 @@
         await AdicionaCubo(cubo);
     }  
     
-    private async Task InitializeThreeJS()
-    {
-        await JSRuntime.InvokeVoidAsync("setupThreeJS", "threeCanvas");
-    }
+
 
 
     
