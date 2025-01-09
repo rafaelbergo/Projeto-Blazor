@@ -6,26 +6,19 @@ import { ViewHelper } from 'three/addons/helpers/ViewHelper.js';
 let cameraPersp, currentCamera;
 let scene, renderer, orbit, helper;
 let controls = [];
-/*
-init();
-render();*/
 
 function init(canvasId) {
 
     var canvas = document.getElementById(canvasId);
-    console.log(canvasId);
-    console.log(canvas);
+
 
     if (!canvas) {
-        console.error('Canvas com id ' + canvasId + ' não encontrado!');
         return;
     }
-    //renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
     renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(canvas.clientWidth, canvas.clientHeight);
     renderer.autoClear = false;
-    //document.body.appendChild(renderer.domElement);
 
     const aspect = window.innerWidth / window.innerHeight;
 
@@ -43,48 +36,13 @@ function init(canvasId) {
     const light = new THREE.DirectionalLight(0xffffff, 4);
     light.position.set(1, 1, 1);
     scene.add(light);
-/*
-    const texture = new THREE.TextureLoader().load('js/crate.gif', render);
-    texture.colorSpace = THREE.SRGBColorSpace;
-    texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
-
-    const geometry = new THREE.BoxGeometry();
-    const material = new THREE.MeshLambertMaterial({ map: texture });*/
 
     orbit = new OrbitControls(currentCamera, renderer.domElement);
     orbit.update();
     orbit.addEventListener('change', render);
 
     helper = new ViewHelper(currentCamera, renderer.domElement);
-    /*
-    function addCube(x, y, z) {
-        const cube = new THREE.Mesh(geometry, material);
-        cube.position.set(x, y, z);
-        scene.add(cube);
-
-        const control = new TransformControls(currentCamera, renderer.domElement);
-        control.attach(cube);
-        scene.add(control);
-
-        controls.push(control); 
-
-        control.addEventListener('change', render);
-
-        control.addEventListener('dragging-changed', function (event) {
-            orbit.enabled = !event.value;
-        });
-
-        const gizmo = control.getHelper();
-        scene.add(gizmo);
-    }
-
-    addCube(0, 0, 0);
-    addCube(2, 0, 0);
-    addCube(0, 2, 0);
-    addCube(0, 0, 2);*/
-
-    window.addEventListener('resize', onWindowResize);
-
+    
     window.addEventListener('keydown', function (event) {
         switch (event.key) {
             case 'w':
@@ -141,17 +99,6 @@ function init(canvasId) {
                 break;
         }
     });
-}
-
-function onWindowResize() {
-    const aspect = window.innerWidth / window.innerHeight;
-
-    cameraPersp.aspect = aspect;
-    cameraPersp.updateProjectionMatrix();
-
-    renderer.setSize(window.innerWidth, window.innerHeight);
-
-    render();
 }
 
 function render() {

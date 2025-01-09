@@ -51,12 +51,11 @@
                 </div>
             </div>
         </div>
-        <div style="flex-grow: 1; display: flex; gap: 20px; padding: 10px;">
-            <div style="flex: 1; display: flex; flex-direction: column; height: 100%;">
-                <MapaGoogle CuboItems="CuboItems" />
-            </div>
 
-            <div style="flex: 1; display: flex; flex-direction: column; height: 100%;">
+        <div style="flex-grow: 1; display: flex; gap: 20px; padding: 10px;">
+            <MapaGoogle CuboItems="CuboItems" />
+
+            <div style="flex: 1;">
                 <canvas id="threeCanvas" style="width: 100%; height: 100%;"></canvas>
             </div>
         </div>
@@ -108,20 +107,7 @@
     }
 
     //
-    private Viewer viewer = null!;
     private Cubo? cuboEditando = null;
-
-    private Scene scene = new Scene{
-        Children =
-        {
-            new GridHelper(100, 50),
-        }
-    };
-    private ViewerSettings settings = new ViewerSettings
-    {
-        CanSelect = true,
-        CanSelectHelpers = false
-    };
 
     private bool isAddItemModalVisible = false;
     private Cubo newItem = new Cubo
@@ -181,33 +167,7 @@
     private async Task AdicionaCubo(Cubo cubo)
     {
         await JSRuntime.InvokeVoidAsync("addCubeToScene", cubo.X, cubo.Y, cubo.Z, cubo.Scale ?? 1, cubo.RotX ?? 0, cubo.RotY ?? 0, cubo.RotZ ?? 0, cubo.Id.ToString());
-        /*
-        var cube = new Mesh
-        {
-            Geometry = new BoxGeometry(),
-            Position = new Vector3(cubo.X, cubo.Y, cubo.Z),
-            Name = cubo.Id.ToString()
-        };
-
-        if (cubo.Scale.HasValue)
-        {
-            cube.Scale = new Vector3(cubo.Scale.Value, cubo.Scale.Value, cubo.Scale.Value);
-        }
-
-        if(cubo.RotX.HasValue || cubo.RotY.HasValue || cubo.RotZ.HasValue)
-        {
-            var rotation = new Euler{
-                X = cubo.RotX.HasValue ? cubo.RotX.Value * Math.PI / 180 : 0,
-                Y = cubo.RotY.HasValue ? cubo.RotY.Value * Math.PI / 180 : 0,
-                Z = cubo.RotZ.HasValue ? cubo.RotZ.Value * Math.PI / 180 : 0
-            };
-            cube.Rotation = rotation;
-        }
-
-        scene.Add(cube);
-        await viewer.UpdateScene();*/
     }
-
     private async void EditCubo(Cubo cubo){
         await JSRuntime.InvokeVoidAsync("editCubeInScene", 
             cubo.X, cubo.Y, cubo.Z, 
@@ -234,23 +194,9 @@
 
    private async Task RemoveCubo(Cubo cubo){
         await JSRuntime.InvokeVoidAsync("removeCubeFromScene", cubo.Id.ToString());
-        /*
-        var cubeMesh = scene.Children.OfType<Mesh>().FirstOrDefault(m => m.Name == cubo.Id.ToString());
-        
-        if (cubeMesh != null)
-        {
-            scene.Children.Remove(cubeMesh);
-            await viewer.UpdateScene();
-        }*/
-
         CuboItems.Remove(cubo);
     }
 
-    private async Task AtualizaCuboCena(Cubo cubo){
-        await RemoveCubo(cubo);
-        await AdicionaCubo(cubo);
-    }  
-    
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -258,5 +204,4 @@
             await JSRuntime.InvokeVoidAsync("initializeScene", "threeCanvas");
         }
     }
-
 }
