@@ -6,16 +6,26 @@ import { ViewHelper } from 'three/addons/helpers/ViewHelper.js';
 let cameraPersp, currentCamera;
 let scene, renderer, orbit, helper;
 let controls = [];
-
+/*
 init();
-render();
+render();*/
 
-function init() {
-    renderer = new THREE.WebGLRenderer({ antialias: true });
+function init(canvasId) {
+
+    var canvas = document.getElementById(canvasId);
+    console.log(canvasId);
+    console.log(canvas);
+
+    if (!canvas) {
+        console.error('Canvas com id ' + canvasId + ' não encontrado!');
+        return;
+    }
+    //renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.autoClear = false;
-    document.body.appendChild(renderer.domElement);
+    //document.body.appendChild(renderer.domElement);
 
     const aspect = window.innerWidth / window.innerHeight;
 
@@ -208,6 +218,12 @@ export function editCubeInScene(x, y, z, scale, rotX, rotY, rotZ, id) {
     addCubeToScene(x, y, z, scale, rotX, rotY, rotZ, id);
 }
 
+export function initializeScene(canvasId) {
+    init(canvasId);
+    render();
+}
+
 window.addCubeToScene = addCubeToScene;
 window.removeCubeFromScene = removeCubeFromScene;
 window.editCubeInScene = editCubeInScene;
+window.initializeScene = initializeScene;

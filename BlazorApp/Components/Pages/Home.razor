@@ -52,18 +52,16 @@
             </div>
         </div>
         <div style="flex-grow: 1; display: flex; gap: 20px; padding: 10px;">
-            <!--   <MapaGoogle CuboItems="CuboItems" />-->
+            <div style="flex: 1; display: flex; flex-direction: column; height: 100%;">
+                <MapaGoogle CuboItems="CuboItems" />
+            </div>
 
-            <div style="flex: 1;">
-                <canvas id="threeCanvas" width="400" height="300"></canvas>
-
-                <!--<Viewer @ref="viewer" Scene="@scene" ViewerSettings="@settings" /> -->
+            <div style="flex: 1; display: flex; flex-direction: column; height: 100%;">
+                <canvas id="threeCanvas" style="width: 100%; height: 100%;"></canvas>
             </div>
         </div>
     </div>
 </div>
-
-<!--<canvas id="threeCanvas" width="800" height="600"></canvas> -->
 
 @if (isAddItemModalVisible)
 {
@@ -253,8 +251,12 @@
         await AdicionaCubo(cubo);
     }  
     
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("initializeScene", "threeCanvas");
+        }
+    }
 
-
-
-    
 }
