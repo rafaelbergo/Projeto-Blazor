@@ -210,7 +210,13 @@
         await viewer.UpdateScene();*/
     }
 
-    private void EditCubo(Cubo cubo){
+    private async void EditCubo(Cubo cubo){
+        await JSRuntime.InvokeVoidAsync("editCubeInScene", 
+            cubo.X, cubo.Y, cubo.Z, 
+            cubo.Scale ?? 1, 
+            cubo.RotX ?? 0, cubo.RotY ?? 0, cubo.RotZ ?? 0, 
+            cubo.Id.ToString());
+
         cuboEditando = cubo;
         newItem = new Cubo
         {

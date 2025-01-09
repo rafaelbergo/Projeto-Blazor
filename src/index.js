@@ -77,12 +77,6 @@ function init() {
 
     window.addEventListener('keydown', function (event) {
         switch (event.key) {
-            case 'q':
-                controls.forEach((control) => {
-                    control.setSpace(control.space === 'local' ? 'world' : 'local');
-                });
-                break;
-
             case 'w':
                 controls.forEach((control) => {
                     control.setMode('translate');
@@ -190,7 +184,7 @@ export function addCubeToScene(x, y, z, scale, rotX, rotY, rotZ, id) {
     render();
 }
 
-export function removeCubeFromScene(id) {
+export function removeCubeFromScene(id){
     const cubeObject = scene.getObjectByName(id.toString());
 
     if (cubeObject) {
@@ -206,5 +200,14 @@ export function removeCubeFromScene(id) {
     }
 }
 
+export function editCubeInScene(x, y, z, scale, rotX, rotY, rotZ, id) {
+    const cubeObject = scene.getObjectByName(id.toString());
+    if (cubeObject) {
+        removeCubeFromScene(id.toString());
+    }
+    addCubeToScene(x, y, z, scale, rotX, rotY, rotZ, id);
+}
+
 window.addCubeToScene = addCubeToScene;
 window.removeCubeFromScene = removeCubeFromScene;
+window.editCubeInScene = editCubeInScene;
