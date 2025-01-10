@@ -79,16 +79,9 @@
     // converte a distancia de graus para metros e retorna em graus
     private GoogleMapPosition ConverteDistancia(GoogleMapPosition pontoInicial, double distanciaX, double distanciaY){
         const double RaioTerra = 6378137;
-
-        double xMetros = pontoInicial.Lng * Math.PI / 180 * RaioTerra * Math.Cos(pontoInicial.Lat * Math.PI / 180);
-        double yMetros = pontoInicial.Lat * Math.PI / 180 * RaioTerra;
-
-        double novoXMetros = xMetros + distanciaX;
-        double novoYMetros = yMetros + distanciaY;
-
-        double novaLatitude = (novoYMetros / RaioTerra) * 180 / Math.PI;
-        double novaLongitude = (novoXMetros / (RaioTerra * Math.Cos(novaLatitude * Math.PI / 180))) * 180 / Math.PI;
-
+        double novaLatitude = pontoInicial.Lat + (distanciaY / RaioTerra) * (180 / Math.PI);
+        double novaLongitude = pontoInicial.Lng + (distanciaX / (RaioTerra * Math.Cos(pontoInicial.Lat * Math.PI / 180))) * (180 / Math.PI);
+        
         return new GoogleMapPosition { Lat = novaLatitude, Lng = novaLongitude };
     }
 }
