@@ -2,9 +2,9 @@
     <div style="max-width: 100%; width: fit-content;">
         <div style="display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-bottom: 10px;">
             <button @onclick="ShowAddItemModal">Add Item</button>
-            <div class="page-size-chooser">
+            <div>
                 Items per page:
-                <select @bind="pagination.ItemsPerPage">
+                <select class="page-size-chooser" @bind="pagination.ItemsPerPage">
                     <option>5</option>
                     <option>10</option>
                     <option>20</option>
@@ -41,7 +41,7 @@
 {
     <div class="modal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); display: flex; justify-content: center; align-items: center;">
         <div class="modal-content" style="background-color: white; padding: 20px; border-radius: 5px; width: 400px;">
-            <h3>@(EditingCubo == null ? "Add Item" : "Edit Item")</h3>
+            <h3 class="fontModel">Add Item</h3>
             @if (EditingCubo != null){
                 <label>Name</label>
                 <input placeholder="Name" @bind="EditingCubo.Name" style="width: 100%; margin-bottom: 10px;" required />
@@ -62,8 +62,10 @@
                 <label>Scale</label>
                 <input placeholder="Scale" type="number" @bind="EditingCubo.Scale" style="width: 100%; margin-bottom: 10px;" />
             }
-            <button @onclick="SaveCubo" style="margin-right: 10px;">Save</button>
-            <button @onclick="CloseAddItemModal">Cancel</button>
+            <div class="modal-buttons">
+                <button @onclick="CloseAddItemModal" class="btn-cancel">Cancel</button>
+                <button @onclick="SaveCubo" class="btn-save">Save</button>
+            </div>
         </div>
     </div>
 }

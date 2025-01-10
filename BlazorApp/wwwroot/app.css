@@ -49,3 +49,135 @@ h1:focus {
 .darker-border-checkbox.form-check-input {
     border-color: #929292;
 }
+
+button {
+    background-color: #adb5bd; 
+    color: black; 
+    border: none; 
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 16px; 
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+button:hover {
+    background-color: #868e96;
+    transform: scale(1.05);
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: flex-end; 
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.modal-buttons .btn-save {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.modal-buttons .btn-save:hover {
+    background-color: #218838;
+    transform: scale(1.05);
+}
+
+.modal-buttons .btn-cancel {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.modal-buttons .btn-cancel:hover {
+    background-color: #c82333;
+    transform: scale(1.05);
+}
+
+.page-size-chooser {
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 16px; 
+    color: #495057;
+    background-color: #fff;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.page-size-chooser:focus {
+    border-color: #868e96;
+    box-shadow: 0 0 5px rgba(173, 181, 189, 0.5);
+}
+
+.anton-regular {
+    font-family: "Anton", serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 40px;
+}
+
+.rubik-font {
+    font-family: "Rubik", serif;
+    font-optical-sizing: auto;
+    font-weight: 350;
+    font-style: normal;
+    font-size: 18px;
+    margin-top: 15px;
+    margin-bottom: 3px;
+}
+
+.fontModel{
+    font-family: "Rubik", serif;
+    font-optical-sizing: auto;
+    font-weight: 350;
+    font-style: normal;
+    font-size: 27px;
+    margin-bottom: 8px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+table th, table td {
+    border-bottom: 1px solid #adb5bd; 
+    border-right: 1px solid #adb5bd;
+    padding: 8px;
+    text-align: center;
+}
+
+table td:last-child, table th:last-child {
+    border-right: none;
+}
+
+table th {
+    font-weight: bold;
+}
+
+table tr:nth-child() {
+    background-color: #f8f9fa; 
+}
+
+table tr:hover {
+    background-color: #e9ecef;
+}

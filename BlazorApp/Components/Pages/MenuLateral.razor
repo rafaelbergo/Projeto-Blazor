@@ -1,10 +1,10 @@
 <div style="width: 215px; background-color: @MenuColor; color: black; padding: 10px; box-shadow: 2px 0 5px rgba(0,0,0,0.1);">
-    <h3>BlazorApp</h3>
+    <h3 class="anton-regular">BlazorApp</h3>
 
-    <p style="color:black;">Background color: </p>
+    <p class="rubik-font">Background color: </p>
     <RadzenColorPicker @bind-Value="@BackgroundColor" ShowHSV="true" ShowRGBA="false" ShowColors="true" ShowButton="false" Change="OnBackgroundColorChanged" />
     
-    <p style="color:black;">Menu color: </p>
+    <p class="rubik-font">Menu color: </p>
     <RadzenColorPicker @bind-Value="@MenuColor" ShowHSV="true" ShowRGBA="false" ShowColors="true" ShowButton="false" Change="OnMenuColorChanged" />
 </div>
 
