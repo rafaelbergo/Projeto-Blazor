@@ -20,7 +20,7 @@
 
         <div style="flex-grow: 1; display: flex; gap: 20px; padding: 10px;">
             <MapaGoogle CuboItems="CuboItems" />
-
+    
             <div style="flex: 1;">
                 <canvas id="threeCanvas" style="width: 100%; height: 100%;"></canvas>
             </div>
@@ -34,24 +34,26 @@
     <div class="modal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); display: flex; justify-content: center; align-items: center;">
         <div class="modal-content" style="background-color: white; padding: 20px; border-radius: 5px; width: 400px;">
             <h3>@(cuboEditando == null ? "Add Item" : "Edit Item")</h3>
-            <label>Name</label>
-            <input placeholder="Name" @bind="cuboEditando.Name" style="width: 100%; margin-bottom: 10px;" required />
-            <label>Description</label>
-            <input placeholder="Description" @bind="cuboEditando.Description" style="width: 100%; margin-bottom: 10px;" />
-            <label>X</label>
-            <input placeholder="X" type="number" @bind="cuboEditando.X" style="width: 100%; margin-bottom: 10px;" />
-            <label>Y</label>
-            <input placeholder="Y" type="number" @bind="cuboEditando.Y" style="width: 100%; margin-bottom: 10px;" />
-            <label>Z</label>
-            <input placeholder="Z" type="number" @bind="cuboEditando.Z" style="width: 100%; margin-bottom: 10px;" />
-            <label>RotX</label>
-            <input placeholder="RotX" type="number" @bind="cuboEditando.RotX" style="width: 100%; margin-bottom: 10px;" />
-            <label>RotY</label>
-            <input placeholder="RotY" type="number" @bind="cuboEditando.RotY" style="width: 100%; margin-bottom: 10px;" />
-            <label>RotZ</label>
-            <input placeholder="RotZ" type="number" @bind="cuboEditando.RotZ" style="width: 100%; margin-bottom: 10px;" />
-            <label>Scale</label>
-            <input placeholder="Scale" type="number" @bind="cuboEditando.Scale" style="width: 100%; margin-bottom: 10px;" />
+            @if (cuboEditando != null){
+                <label>Name</label>
+                <input placeholder="Name" @bind="cuboEditando.Name" style="width: 100%; margin-bottom: 10px;" required />
+                <label>Description</label>
+                <input placeholder="Description" @bind="cuboEditando.Description" style="width: 100%; margin-bottom: 10px;" />
+                <label>X</label>
+                <input placeholder="X" type="number" @bind="cuboEditando.X" style="width: 100%; margin-bottom: 10px;" />
+                <label>Y</label>
+                <input placeholder="Y" type="number" @bind="cuboEditando.Y" style="width: 100%; margin-bottom: 10px;" />
+                <label>Z</label>
+                <input placeholder="Z" type="number" @bind="cuboEditando.Z" style="width: 100%; margin-bottom: 10px;" />
+                <label>RotX</label>
+                <input placeholder="RotX" type="number" @bind="cuboEditando.RotX" style="width: 100%; margin-bottom: 10px;" />
+                <label>RotY</label>
+                <input placeholder="RotY" type="number" @bind="cuboEditando.RotY" style="width: 100%; margin-bottom: 10px;" />
+                <label>RotZ</label>
+                <input placeholder="RotZ" type="number" @bind="cuboEditando.RotZ" style="width: 100%; margin-bottom: 10px;" />
+                <label>Scale</label>
+                <input placeholder="Scale" type="number" @bind="cuboEditando.Scale" style="width: 100%; margin-bottom: 10px;" />
+            }
             <button @onclick="SalvaItem" style="margin-right: 10px;">Save</button>
             <button @onclick="CloseAddItemModal">Cancel</button>
         </div>
@@ -76,18 +78,12 @@
     // QuickGridCubo
     List<Cubo> CuboItems = new List<Cubo>();
 
+    private Cubo? newItem = null;
+
     private Cubo? cuboEditando = null;
+    
     public bool isAddItemModalVisible = false;
 
-    private Cubo newItem = new Cubo
-    {
-        Name = "",
-        X = 0,
-        Y = 0,
-        Z = 0,
-        Scale = 1
-    };
-    
     private void CloseAddItemModal()
     {
         isAddItemModalVisible = false;
@@ -128,6 +124,7 @@
     {
         await JSRuntime.InvokeVoidAsync("addCubeToScene", cubo.X, cubo.Y, cubo.Z, cubo.Scale ?? 1, cubo.RotX ?? 0, cubo.RotY ?? 0, cubo.RotZ ?? 0, cubo.Id.ToString());
     }
+
     private async void EditCubo(Cubo cubo){
         await JSRuntime.InvokeVoidAsync("editCubeInScene", 
             cubo.X, cubo.Y, cubo.Z, 
@@ -151,10 +148,10 @@
         isAddItemModalVisible = true;
 
         StateHasChanged(); 
-
     }
 
-   private async Task RemoveCubo(Cubo cubo){
+    private async Task RemoveCubo(Cubo cubo)
+    {
         await JSRuntime.InvokeVoidAsync("removeCubeFromScene", cubo.Id.ToString());
         CuboItems.Remove(cubo);
     }

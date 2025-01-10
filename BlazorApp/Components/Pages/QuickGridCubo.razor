@@ -42,24 +42,26 @@
     <div class="modal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); display: flex; justify-content: center; align-items: center;">
         <div class="modal-content" style="background-color: white; padding: 20px; border-radius: 5px; width: 400px;">
             <h3>@(EditingCubo == null ? "Add Item" : "Edit Item")</h3>
-            <label>Name</label>
-            <input placeholder="Name" @bind="EditingCubo.Name" style="width: 100%; margin-bottom: 10px;" required />
-            <label>Description</label>
-            <input placeholder="Description" @bind="EditingCubo.Description" style="width: 100%; margin-bottom: 10px;" />
-            <label>X</label>
-            <input placeholder="X" type="number" @bind="EditingCubo.X" style="width: 100%; margin-bottom: 10px;" />
-            <label>Y</label>
-            <input placeholder="Y" type="number" @bind="EditingCubo.Y" style="width: 100%; margin-bottom: 10px;" />
-            <label>Z</label>
-            <input placeholder="Z" type="number" @bind="EditingCubo.Z" style="width: 100%; margin-bottom: 10px;" />
-            <label>RotX</label>
-            <input placeholder="RotX" type="number" @bind="EditingCubo.RotX" style="width: 100%; margin-bottom: 10px;" />
-            <label>RotY</label>
-            <input placeholder="RotY" type="number" @bind="EditingCubo.RotY" style="width: 100%; margin-bottom: 10px;" />
-            <label>RotZ</label>
-            <input placeholder="RotZ" type="number" @bind="EditingCubo.RotZ" style="width: 100%; margin-bottom: 10px;" />
-            <label>Scale</label>
-            <input placeholder="Scale" type="number" @bind="EditingCubo.Scale" style="width: 100%; margin-bottom: 10px;" />
+            @if (EditingCubo != null){
+                <label>Name</label>
+                <input placeholder="Name" @bind="EditingCubo.Name" style="width: 100%; margin-bottom: 10px;" required />
+                <label>Description</label>
+                <input placeholder="Description" @bind="EditingCubo.Description" style="width: 100%; margin-bottom: 10px;" />
+                <label>X</label>
+                <input placeholder="X" type="number" @bind="EditingCubo.X" style="width: 100%; margin-bottom: 10px;" />
+                <label>Y</label>
+                <input placeholder="Y" type="number" @bind="EditingCubo.Y" style="width: 100%; margin-bottom: 10px;" />
+                <label>Z</label>
+                <input placeholder="Z" type="number" @bind="EditingCubo.Z" style="width: 100%; margin-bottom: 10px;" />
+                <label>RotX</label>
+                <input placeholder="RotX" type="number" @bind="EditingCubo.RotX" style="width: 100%; margin-bottom: 10px;" />
+                <label>RotY</label>
+                <input placeholder="RotY" type="number" @bind="EditingCubo.RotY" style="width: 100%; margin-bottom: 10px;" />
+                <label>RotZ</label>
+                <input placeholder="RotZ" type="number" @bind="EditingCubo.RotZ" style="width: 100%; margin-bottom: 10px;" />
+                <label>Scale</label>
+                <input placeholder="Scale" type="number" @bind="EditingCubo.Scale" style="width: 100%; margin-bottom: 10px;" />
+            }
             <button @onclick="SaveCubo" style="margin-right: 10px;">Save</button>
             <button @onclick="CloseAddItemModal">Cancel</button>
         </div>
@@ -97,6 +99,11 @@
 
     private void SaveCubo()
     {
+        if (EditingCubo == null)
+        {
+            return;
+        }
+        
         if (CuboItems.Contains(EditingCubo))
         {
             OnEditCubo.InvokeAsync(EditingCubo);
