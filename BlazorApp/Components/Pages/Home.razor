@@ -1,6 +1,5 @@
 ﻿@page "/"
 @rendermode InteractiveServer
-@inject IConfiguration Configuration
 @inject IJSRuntime JSRuntime
 
 <PageTitle>Blazor Project</PageTitle>
@@ -60,7 +59,9 @@
             </div>
         </div>
     </div>
+
 </div>
+<QuickGridCubo CuboItems="CuboItems"/>
 
 @if (isAddItemModalVisible)
 {
