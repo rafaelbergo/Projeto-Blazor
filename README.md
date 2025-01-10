@@ -1,7 +1,6 @@
 # Projeto Blazor
 
-Este projeto é uma aplicação desenvolvida em **Blazor** com o objetivo de explorar o uso do framework Blazor, **Three.js** para manipulação de objetos 3D e integração com a **API do Google Maps**. Ele foi criado como parte de um desafio para praticar habilidades de desenvolvimento e criar uma interface moderna e interativa.
-
+Este projeto é uma aplicação desenvolvida em **Blazor** com o objetivo de explorar o uso do framework Blazor, **Three.js** para manipulação de objetos 3D e integração com a **API do Google Maps**.
 
 ## Funcionalidades
 
