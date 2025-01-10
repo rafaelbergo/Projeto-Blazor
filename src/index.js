@@ -28,7 +28,7 @@ function init(canvasId) {
     currentCamera.position.set(5, 2.5, 5);
 
     scene = new THREE.Scene();
-    scene.add(new THREE.GridHelper(100, 50, 0x888888, 0x444444));
+    scene.add(new THREE.GridHelper(100, 100, 0x888888, 0x444444));
 
     const ambientLight = new THREE.AmbientLight(0xffffff);
     scene.add(ambientLight);
